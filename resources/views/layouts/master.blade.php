@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-12 margin-tb" style="background-color: #FF0000;"> 
             
-            <a class="navbar-brand " href="" style="margin: 10px;">
+            <a class="navbar-brand " href="https://int.bolcc.tw" style="margin: 10px;">
                 <span class="text-white pull-left"><img src="/images/logo-w.png" height="36px"> 台北靈糧堂 同工專屬</span></a> 
                 <span class="text-white pull-right">親愛的 同工 {{ $user_name }}，平安！</span>
            
@@ -31,38 +31,46 @@
     </div>
 
     <span style="margin-top: 5px;">
-        <a href={{ route('jobs.index') }}><span class="btn btn-primary"><span class="badge badge-warning">{{ $num }}</span> 
+    <div class="input-group mb-7">
+        {!! Form::open(array('route' => 'jobs.getsearch','method'=>'POST')) !!}
+    <div class="input-group mb-2">
+
+      </div>
+      {{ Form::close() }}
+        <a class="btn btn-success" href={{ route('jobs.search') }}><img src="/itjobs/images/home.jpg" height=30px></a>
+        &nbsp;&nbsp;
+        <span class="btn btn-primary"><span class="badge badge-warning">{{ $num }}</span> 
         @if ($status == "Y")
         已完成工作列表
         @else
         工作進度追蹤表
         @endif
          - 
-        @if (Request::is('jobs/search') or Request::is('jobs/search/Y') or Request::is('jobs/getsearch'))
-            事工管理處
+        @if ($whichmode == "P")
+            {{ $dept_name }} ({{ $user_name }})
         @else
             {{ $dept_name }}
         @endif
-        </span}></a>
+        </span>
     </span>
     @unless (Request::is('jobs/create') or Request::is('jobs/*/edit'))
-        <span style="margin-top: 5px;"><a class="btn btn-md btn-warning" href="{{ route('jobs.create') }}">新增工作</a></span>
+        &nbsp;&nbsp;<span style="margin-top: 0px;"><a class="btn btn-md btn-warning" href="{{ route('jobs.create') }}">新增工作</a></span>&nbsp;&nbsp;
         @if ($num > 0)
-            @if (Request::is('jobs/search') or Request::is('jobs/getsearch'))
-                <span style="margin-top: 5px;">
-                    <a class="btn btn-secondary" href="{{ route('posts.export',['deptid'=> $deptid, 'status'=>$status, 'searchKey' => $searchKey ]) }}"> 下載 </a>
+            @if (Request::is('jobs/search') or Request::is('jobs/getsearch') or Request::is('getsearch'))
+                <span style="margin-top: 0px;">
+                    <a class="btn btn-secondary" href="{{ route('posts.export',['crewid'=> $crewid, 'status'=>$status, 'searchKey' => $searchKey ]) }}"> 下載 </a>
                 </span>
             @else
-                <span style="margin-top: 5px;">
-                    <a class="btn btn-secondary" href="{{ route('posts.export',['deptid'=> -1, 'status'=>$status, 'searchKey' => '' ]) }}"> 下載 </a>
+                <span style="margin-top: 0px;">
+                    <a class="btn btn-secondary" href="{{ route('posts.export',['crewid'=> -1, 'status'=>$status, 'searchKey' => '' ]) }}"> 下載 </a>
                 </span>
             @endif
         @endif
     @endunless
-
+</div>
     @yield('content')
 
-    @include('jobs.footer')
+    @include('layouts.footer')
 
 
    </div>

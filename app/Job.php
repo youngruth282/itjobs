@@ -67,4 +67,13 @@ class Job extends Model
         //return new Carbon($date);
         return Carbon::parse($date)->format('Y-m-d');
     }
+
+    public function Udept()
+    {
+        return $this->belongsTo('App\Myuser','pid','req_pid');
+    }
+    public function owner()
+    {
+        return $this->belongsTo('App\Myuser','pid','req_pid');
+    }
 }

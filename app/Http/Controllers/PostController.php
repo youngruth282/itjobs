@@ -98,28 +98,30 @@ class PostController extends Controller
     }
     public function export(Request $request)
     {
-        $deptid=$request->deptid;
+        $deptid = session('hr_sn');
+        $dept_name = session('dept_name');
         if ($request->status) $status=$request->status;
         else $status="A";//其實可以不用
         if ($request->searchKey) $searchKey=$request->searchKey;
         else $searchKey='';
         //        dd($searchKey);
-        $pid = session('pid');
-        $dept_name = \App\Dept::where('hr_sn', $deptid)->select('dept_name')->first();
-        $fname = 'Jobs_'.$dept_name['dept_name'].date('Ymd').'.xlsx';
+        $crewid=$request->crewid;
+        // $user_name = \App\Myuser::where('pid', $crewid)->select('user_name')->first();
+        $fname = 'Jobs_'.$dept_name.date('Ymd').'.xlsx';
         //$posts = $this->postRepository->getAll();
-        if ($deptid == -1){//個人
+        if ($crewid == -1){//個人
+            $pid = session('pid');
             $searchArray = array('req_pid'=>$pid);//
             /* 若是將來連個人都要分 進行中/已完成則需要
             if ($status == 0) $searchArray = array('req_pid'=>$pid);
             else $searchArray = array('app_status'=> $status, 'req_pid'=>$pid);*/
-        }else if ($deptid > 0 and $status != 'A'){//選擇狀態 - 選擇部門
-            $searchArray = array('app_status'=> $status, 'app_deptid'=>$deptid);
-        }else if ($deptid == 0 and $status != 'A'){//選擇狀態 - 全部部門
+        }else if ($crewid > 0 and $status != 'A'){//選擇狀態 - 選擇部門
+            $searchArray = array('app_status'=> $status, 'req_pid'=>$crewid);
+        }else if ($crewid == 0 and $status != 'A'){//選擇狀態 - 全部部門
             $searchArray = array('app_status'=> $status);
-        }else if ($deptid > 0 and $status == 'A'){//全部狀態 - 選擇部門
-            $searchArray = array('app_deptid'=>$deptid);
-        }else if ($deptid == 0 and $status == 'A'){//全部狀態 - 全部部門
+        }else if ($crewid > 0 and $status == 'A'){//全部狀態 - 選擇部門
+            $searchArray = array('req_pid'=>$crewid);
+        }else if ($crewid == 0 and $status == 'A'){//全部狀態 - 全部部門
             return \Excel::download(new Exports\PostsExport($this->postRepository, $searchKey), $fname);
         }
         
